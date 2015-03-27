@@ -16,7 +16,7 @@ import java.util.Scanner;
 
 /**
  *
- * @author Chase
+ * @author Chase Parks, Tyler Parker
  */
 public class Compression {
     private HashMap<Character, Integer> characterFrequencies;

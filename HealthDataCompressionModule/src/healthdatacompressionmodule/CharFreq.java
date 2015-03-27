@@ -7,7 +7,7 @@ package healthdatacompressionmodule;
 
 /**
  *
- * @author Chase
+ * @author Chase Parks, Tyler Parker
  */
 public class CharFreq implements Comparable<CharFreq> {
 
