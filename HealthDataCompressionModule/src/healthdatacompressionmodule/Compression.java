@@ -8,6 +8,7 @@ package healthdatacompressionmodule;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -65,6 +66,7 @@ public class Compression {
      */
     public void constructCharFreqs(){
         ArrayList<Character> charKeys = new ArrayList<>(characterFrequencies.keySet());
+        Collections.sort(charKeys);
         for (Character charKey : charKeys) {
             charFreqs.add(new CharFreq(charKey, characterFrequencies.get(charKey)));
         }
@@ -144,7 +146,7 @@ public class Compression {
         System.out.println("\n====================");
         System.out.println("Huffman codes for each character");
         for (CharFreq charFreq : charFreqs) {
-            System.out.printf("%-5c%s\n", charFreq.ch,Integer.toBinaryString(charFreq.freq));
+            System.out.printf("%-5c%s\n", charFreq.ch,Integer.toBinaryString(charFreq.huffMan));
         }
     }
     
