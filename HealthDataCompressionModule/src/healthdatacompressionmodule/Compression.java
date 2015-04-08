@@ -6,6 +6,9 @@
 package healthdatacompressionmodule;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,11 +25,13 @@ import java.util.Scanner;
 public class Compression {
     private HashMap<Character, Integer> characterFrequencies;
     private ArrayList<CharFreq> charFreqs;
+    private String data;
     
     
     public Compression() {
         charFreqs = new ArrayList<>();
         characterFrequencies = new HashMap<>();
+        data = "";
     }
     
     /**
@@ -42,6 +47,7 @@ public class Compression {
                 characterFrequencies.put(dataLine.charAt(i), 1);
             }
         }
+        data += dataLine;
     }
     
     /**
@@ -162,5 +168,39 @@ public class Compression {
         }
         constructCharFreqs();
         calculateHuffManEncoding();
+    }
+    
+    public void generateCompressedData() throws IOException{
+    	PrintWriter writer = new PrintWriter("output.txt");
+    	PrintWriter tableWriter = new PrintWriter("table.txt");
+    	
+    	// Write the table file and close the tableWriter object afterward.
+    	for (CharFreq charFreq : charFreqs) {
+    		tableWriter.printf("%-5c%s\n", charFreq.ch,Integer.toBinaryString(charFreq.huffMan));
+		}
+    	tableWriter.close(); // Closing the tableWriter object
+    	
+    	// Write the data for the compressed data
+    	for(int i = 0; i < data.length(); i++){
+    		// Get the character from the string
+    		char c = data.charAt(i);
+    		
+    		// Get the node to which the character corresponds to
+    		CharFreq targetNode = null;
+    		for (CharFreq charFreq : charFreqs) {
+				if(charFreq.ch == c){
+					// target found go ahead an end the loop
+					targetNode = charFreq;
+					break;
+				}
+			}
+    		
+    		// Write the huffman code to the file.
+    		writer.print(Integer.toBinaryString(targetNode.huffMan));
+    		
+    	}
+    	writer.close(); // Close the writer object
+    	
+    	
     }
 }
