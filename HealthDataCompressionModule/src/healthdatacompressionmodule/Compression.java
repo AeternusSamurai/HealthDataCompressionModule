@@ -171,7 +171,7 @@ public class Compression {
     }
     
     public void generateCompressedData() throws IOException{
-    	PrintWriter writer = new PrintWriter("output.txt");
+    	PrintWriter writer = new PrintWriter("output.dat");
     	PrintWriter tableWriter = new PrintWriter("table.txt");
     	
     	// Write the table file and close the tableWriter object afterward.

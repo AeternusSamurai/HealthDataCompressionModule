@@ -5,6 +5,8 @@
  */
 package healthdatacompressionmodule;
 
+import java.io.IOException;
+
 /**
  *
  * @author Chase Parks, Tyler Parker
@@ -17,16 +19,22 @@ public class HealthDataCompressionModule {
     public static void main(String[] args) {
         char[] ch = {'a', 'b', 'c', 'd', 'e', 'f'};
         int[] freq = {5, 9, 12, 13, 16, 45};
-        String data2 = "";
+        String data = "";
         for (int i = 0; i < ch.length; i++) {
             for (int j = 0; j < freq[i]; j++) {
-                data2+=ch[i];
+                data+=ch[i];
             }
         }
         Compression session = new Compression();
-        String data = "Profit' is a dirty word only to the leeches of the world. They want it seen as evil, so they can more easily snatch what they did not earn.";
-        session.startCompression(data2);
+        String data2 = "Profit' is a dirty word only to the leeches of the world. They want it seen as evil, so they can more easily snatch what they did not earn.";
+        String data3 = "input.txt";
+        session.startCompression(data3);
         session.printHuffmanEncoding();
+        try {
+			session.generateCompressedData();
+		} catch (IOException e) {
+			System.out.println("Something happened. Contact someone who might be able to fix it.");
+		}
     }
 
 }
