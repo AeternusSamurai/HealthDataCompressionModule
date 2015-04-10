@@ -6,10 +6,17 @@
 package healthdatacompressionmodule;
 
 import java.io.IOException;
+import java.io.ObjectInputStream.GetField;
 
 /**
- *
- * @author Chase Parks, Tyler Parker
+ * Health Data Compression Module (Group 2)
+ * @author Chase Parks, Tyler Parker, Logan Lindon, Sarah Haman, Tim Strutz.
+ * @author d35kumar
+ * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
+ */
+
+/*
+ * TODO Add in decompression packet: reading both files and reconstructing the compressed data
  */
 public class HealthDataCompressionModule {
 
@@ -29,7 +36,7 @@ public class HealthDataCompressionModule {
         String data2 = "Profit' is a dirty word only to the leeches of the world. They want it seen as evil, so they can more easily snatch what they did not earn.";
         String data3 = "input.txt";
         session.startCompression(data3);
-        session.printHuffmanEncoding();
+        session.printHuffmanEncoding(session.getBinaryHuffmanStrings());
         try {
 			session.generateCompressedData();
 		} catch (IOException e) {

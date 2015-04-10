@@ -19,8 +19,10 @@ import java.util.Queue;
 import java.util.Scanner;
 
 /**
- *
- * @author Chase Parks, Tyler Parker
+ * Health Data Compression Module (Group 2)
+ * @author Chase Parks, Tyler Parker, Logan Lindon, Sarah Haman, Tim Strutz.
+ * @author d35kumar
+ * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
  */
 public class Compression {
     private HashMap<Character, Integer> characterFrequencies;
@@ -83,6 +85,7 @@ public class Compression {
      * @param code Starting with 0
      * @return It is used for just calculating the huffrecursion value further.
      * It's is not returning any final value
+     * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java 
      */
     public int huffManEncoding(CharFreq rootNode, int code) {
         if (!rootNode.isLeafNode()) {
@@ -109,6 +112,7 @@ public class Compression {
      *
      * @param rootNode Root node of the tree
      * @param code Empty stringBuilder, which
+     * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
      */
     public void huffManEncoding(CharFreq rootNode, StringBuilder code) {
         if (!rootNode.isLeafNode()) {
@@ -130,6 +134,7 @@ public class Compression {
     /**
      * Create the Huffman tree and start the encoding on the root node of the tree, and then
      * calculates the encoding for all of the characters from the data source.
+     * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
      */
     public void calculateHuffManEncoding() {
         Queue<CharFreq> pQueue = new PriorityQueue<>();
@@ -156,6 +161,14 @@ public class Compression {
         }
     }
     
+    public void printHuffmanEncoding(ArrayList<String> binaryStrings){
+    	System.out.println("======================");
+    	System.out.println("Huffman codes for each character");
+    	for(int i = 0; i < binaryStrings.size(); i++){
+    		System.out.printf("%-5c%s\n", charFreqs.get(i).ch, binaryStrings.get(i));
+    	}
+    }
+    
     /**
      * A quick start method to start up a compression session.
      * @param s Can either be a fileName or a line of words.
@@ -170,13 +183,50 @@ public class Compression {
         calculateHuffManEncoding();
     }
     
-    public void generateCompressedData() throws IOException{
+    public ArrayList<String> getBinaryHuffmanStrings(){
+    	ArrayList<String> binaryStrings = new ArrayList<String>();
+    	
+    	// Get all of the Strings from the huffman tree
+    	for (CharFreq charFreq : charFreqs) {
+			binaryStrings.add(Integer.toBinaryString(charFreq.huffMan));
+		}
+    	// Get the length of the largest binary number
+    	int largestNum = getLargestNumber(binaryStrings);
+    	
+    	normalizeBinaries(binaryStrings, largestNum);
+    	
+    	return binaryStrings;
+    }
+    
+    private void normalizeBinaries(ArrayList<String> binaryStrings, int largestNum) {
+		for(int i = 0; i < binaryStrings.size(); i++){
+			String binary = binaryStrings.get(i);
+			int zerosToAdd = largestNum - binary.length();
+			for(int j = 0; j < zerosToAdd; j++){
+				binary = "0" + binary;
+			}
+			binaryStrings.set(i,binary);
+		}
+		
+	}
+
+	private int getLargestNumber(ArrayList<String> binaryStrings) {
+		int largestNum = 0;
+		for (String string : binaryStrings) {
+			if(string.length() > largestNum) largestNum = string.length();
+		}
+		return largestNum;
+	}
+
+	public void generateCompressedData() throws IOException{
     	PrintWriter writer = new PrintWriter("output.dat");
     	PrintWriter tableWriter = new PrintWriter("table.txt");
     	
+    	ArrayList<String> binaryStrings = getBinaryHuffmanStrings();
+    	
     	// Write the table file and close the tableWriter object afterward.
-    	for (CharFreq charFreq : charFreqs) {
-    		tableWriter.printf("%-5c%s\n", charFreq.ch,Integer.toBinaryString(charFreq.huffMan));
+    	for (int i = 0; i < binaryStrings.size(); i++) {
+    		tableWriter.printf("%-5c%s\n", charFreqs.get(i).ch,binaryStrings.get(i));
 		}
     	tableWriter.close(); // Closing the tableWriter object
     	
@@ -187,16 +237,18 @@ public class Compression {
     		
     		// Get the node to which the character corresponds to
     		CharFreq targetNode = null;
+    		int targetString = 0;
     		for (CharFreq charFreq : charFreqs) {
 				if(charFreq.ch == c){
 					// target found go ahead an end the loop
 					targetNode = charFreq;
 					break;
 				}
+				targetString++;
 			}
     		
     		// Write the huffman code to the file.
-    		writer.print(Integer.toBinaryString(targetNode.huffMan));
+    		writer.print(binaryStrings.get(targetString));
     		
     	}
     	writer.close(); // Close the writer object

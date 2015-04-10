@@ -6,8 +6,10 @@
 package healthdatacompressionmodule;
 
 /**
- *
- * @author Chase Parks, Tyler Parker
+ * Health Data Compression Module (Group 2)
+ * @author Chase Parks, Tyler Parker, Logan Lindon, Sarah Haman, Tim Strutz.
+ * @author d35kumar
+ * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
  */
 public class CharFreq implements Comparable<CharFreq> {
 
