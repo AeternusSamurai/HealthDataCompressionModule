@@ -5,6 +5,7 @@
  */
 package healthdatacompressionmodule;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream.GetField;
 
@@ -29,38 +30,80 @@ public class HealthDataCompressionModule {
 	 */
 	public static void main(String[] args) {
 		// order of parameters: command inputFilePath outputFilePath
-		// compress inputFilePath outputFilePath
-		if (args.length != 3) {
-			// not enough arguments
-
-		} else if (args[0].equals("compression")) {
-			Compression session = new Compression();
-			session.startCompression(args[1]);
-			try {
-				session.generateCompressedData(args[2]);
-			} catch (Exception e) {
-				System.out.println("Wierd Stuff Happened. Contact someone who knows what's going on...");
+		if (args.length == 3) {
+			// compress inputFilePath outputFilePath
+			if (args[0].equals("compression")) {
+				compress(args[1], args[2]);
+			} else
+			// decompress inputFilePath outputFilePath
+			if (args[0].equals("decompress")) {
+				decompress(args[1], args[2]);
+			} else
+			// A test portion to test the compression and decompression classes
+			if (args[0].equals("test")) {
+				test(args[1], args[2]);
+			} else
+			// show the help menu
+			if (args[0].equals("help")) {
+				showHelp();
+			} else {
+				// command wasn't recognized by the system
+				System.out.println("Command not recognized");
+				showHelp();
 			}
-		} else
-		// decompress inputFilePath outputFilePath
-		if (args[0].equals("decompress")) {
 
 		} else {
-			// command wasn't recognized by the system
+			// Not enough arguments
+			System.out.println("Not enough arguments");
 			showHelp();
+		}
+
+	}
+
+	public static void compress(String input, String output) {
+		Compression session = new Compression();
+		session.startCompression(input);
+		try {
+			session.generateCompressedData(output);
+		} catch (Exception e) {
+			System.out
+					.println("Wierd Stuff Happened. Contact someone who knows what's going on...");
 		}
 	}
 
-	public static void compress() {
-
-	}
-
-	public static void decompress() {
-
+	public static void decompress(String input, String output) {
+		Decompression session = new Decompression(input, output);
+		String data = session.decompress();
+		System.out.println(data);
 	}
 
 	public static void showHelp() {
+		System.out.println("Here is a list of available commands:");
+		System.out
+				.printf("compress inputFile outputPath %109s\n",  "---->  inputFile is the file to be compressed and outputPath is the destination to send the compressed file");
+		System.out
+				.printf("decompress inputZip outputPath  %53s\n","---->  inputZip is the zip archive that contains the compressed data and outputPath is the location of the archived files");
+		System.out.printf("help  %53s\n","---->  shows this help menu");
+		System.out
+				.printf("test inputFile outputPath  %42s\n","---->  see the compress command above");
+		System.out
+				.println("The above test command runs the test program that is attacted to this module");
+	}
 
+	public static void test(String input, String output) {
+		String testFile = "input.txt";
+		Compression comSession = new Compression();
+		comSession.startCompression(input);
+		try {
+			comSession.generateCompressedData(output);
+		} catch (Exception e) {
+			System.err
+					.println("Weird stuff happened. You'll need to debug this...");
+		}
+		Decompression decSession = new Decompression(output + File.separator
+				+ "compressed.zip", input.substring(0, input.indexOf(testFile)));
+		String data = decSession.decompress();
+		System.out.println(data);
 	}
 
 }

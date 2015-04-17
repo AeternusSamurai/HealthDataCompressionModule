@@ -231,34 +231,40 @@ public class Compression {
     	
     	ArrayList<String> binaryStrings = getBinaryHuffmanStrings();
     	
-    	// Write the table file and close the tableWriter object afterward.
-    	for (int i = 0; i < binaryStrings.size(); i++) {
-    		tableWriter.printf("%-5c%s\n", charFreqs.get(i).ch,binaryStrings.get(i));
-		}
-    	tableWriter.close(); // Closing the tableWriter object
     	
+    	String data = "";
     	// Write the data for the compressed data
     	for(int i = 0; i < data.length(); i++){
     		// Get the character from the string
     		char c = data.charAt(i);
     		
     		// Get the node to which the character corresponds to
-    		CharFreq targetNode = null;
     		int targetString = 0;
     		for (CharFreq charFreq : charFreqs) {
 				if(charFreq.ch == c){
 					// target found go ahead an end the loop
-					targetNode = charFreq;
 					break;
 				}
 				targetString++;
 			}
     		
+    		
     		// Write the huffman code to the file.
-    		writer.print(binaryStrings.get(targetString));
+    		data += binaryStrings.get(targetString);
     		
     	}
+    	Scanner code = new Scanner(data);
+    	long numCode = code.nextLong();
+    	writer.print(numCode);
     	writer.close(); // Close the writer object
+    	code.close();
+    	
+    	tableWriter.println(data.length());
+    	// Write the table file and close the tableWriter object afterward.
+    	for (int i = 0; i < binaryStrings.size(); i++) {
+    		tableWriter.printf("%-5c%s\n", charFreqs.get(i).ch,binaryStrings.get(i));
+		}
+    	tableWriter.close(); // Closing the tableWriter object
     	
     	System.out.println("Writing new files to zip...");
     	addToZipFile("output.txt", zos);
