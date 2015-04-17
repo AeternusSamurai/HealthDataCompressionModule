@@ -6,6 +6,9 @@
 package healthdatacompressionmodule;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +20,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Health Data Compression Module (Group 2)
@@ -218,9 +223,11 @@ public class Compression {
 		return largestNum;
 	}
 
-	public void generateCompressedData() throws IOException{
-    	PrintWriter writer = new PrintWriter("output.dat");
+	public void generateCompressedData(String outputDest) throws IOException{
+    	PrintWriter writer = new PrintWriter("output.txt");
     	PrintWriter tableWriter = new PrintWriter("table.txt");
+    	FileOutputStream fos = new FileOutputStream(outputDest+"\\compressed.zip");
+    	ZipOutputStream zos = new ZipOutputStream(fos);
     	
     	ArrayList<String> binaryStrings = getBinaryHuffmanStrings();
     	
@@ -253,6 +260,28 @@ public class Compression {
     	}
     	writer.close(); // Close the writer object
     	
+    	System.out.println("Writing new files to zip...");
+    	addToZipFile("output.txt", zos);
+    	addToZipFile("table.txt", zos);
+    	zos.close();
+    	fos.close();
     	
     }
+	
+	private void addToZipFile(String fileName, ZipOutputStream zos) throws FileNotFoundException, IOException{
+		File file = new File(fileName);
+		FileInputStream fis = new FileInputStream(file);
+		ZipEntry ze = new ZipEntry(fileName);
+		zos.putNextEntry(ze);
+		
+		byte[] bytes = new byte[1024];
+		int length;
+		while((length = fis.read(bytes))>=0){
+			zos.write(bytes, 0, length);
+		}
+		
+		zos.closeEntry();
+		fis.close();
+		
+	}
 }

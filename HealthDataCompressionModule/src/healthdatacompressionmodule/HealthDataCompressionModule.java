@@ -10,38 +10,57 @@ import java.io.ObjectInputStream.GetField;
 
 /**
  * Health Data Compression Module (Group 2)
+ * 
  * @author Chase Parks, Tyler Parker, Logan Lindon, Sarah Haman, Tim Strutz.
- * @author d35kumar
- * Source: https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
+ * @author d35kumar Source:
+ *         https://github.com/dharam3/DS/blob/master/src/com/dk/
+ *         greedy/HuffmanCoding.java
  */
 
 /*
- * TODO Add in decompression packet: reading both files and reconstructing the compressed data
+ * TODO Add in decompression packet: reading both files and reconstructing the
+ * compressed data
  */
 public class HealthDataCompressionModule {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        char[] ch = {'a', 'b', 'c', 'd', 'e', 'f'};
-        int[] freq = {5, 9, 12, 13, 16, 45};
-        String data = "";
-        for (int i = 0; i < ch.length; i++) {
-            for (int j = 0; j < freq[i]; j++) {
-                data+=ch[i];
-            }
-        }
-        Compression session = new Compression();
-        String data2 = "Profit' is a dirty word only to the leeches of the world. They want it seen as evil, so they can more easily snatch what they did not earn.";
-        String data3 = "input.txt";
-        session.startCompression(data3);
-        session.printHuffmanEncoding(session.getBinaryHuffmanStrings());
-        try {
-			session.generateCompressedData();
-		} catch (IOException e) {
-			System.out.println("Something happened. Contact someone who might be able to fix it.");
+	/**
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
+		// order of parameters: command inputFilePath outputFilePath
+		// compress inputFilePath outputFilePath
+		if (args.length != 3) {
+			// not enough arguments
+
+		} else if (args[0].equals("compression")) {
+			Compression session = new Compression();
+			session.startCompression(args[1]);
+			try {
+				session.generateCompressedData(args[2]);
+			} catch (Exception e) {
+				System.out.println("Wierd Stuff Happened. Contact someone who knows what's going on...");
+			}
+		} else
+		// decompress inputFilePath outputFilePath
+		if (args[0].equals("decompress")) {
+
+		} else {
+			// command wasn't recognized by the system
+			showHelp();
 		}
-    }
+	}
+
+	public static void compress() {
+
+	}
+
+	public static void decompress() {
+
+	}
+
+	public static void showHelp() {
+
+	}
 
 }
