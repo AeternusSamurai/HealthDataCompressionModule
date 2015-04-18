@@ -28,7 +28,7 @@ public class Decompression {
 		byte[] buffer = new byte[1024];
 		try{
 			File folder = new File(outputFileDest);
-			if(!folder.exists()){
+			if(!outputFileDest.isEmpty() && !folder.exists()){
 				folder.mkdir();
 			}
 			
@@ -37,7 +37,7 @@ public class Decompression {
 			
 			while(ze != null){
 				String fileName = ze.getName();
-				File newFile = new File(outputFileDest+ File.separator + fileName);
+				File newFile = new File(((outputFileDest.isEmpty()) ? fileName : outputFileDest+ File.separator + fileName));
 				FileOutputStream fos = new FileOutputStream(newFile);
 				
 				int length;
@@ -51,17 +51,18 @@ public class Decompression {
 			zis.closeEntry();
 			zis.close();
 		}catch (Exception e){
-			System.err.println("DECOMPRESS: Another thing went wrong. Contact someone who knows what's going on...");
+			System.err.println("DECOMPRESS [EXTRACT]: Another thing went wrong. Contact someone who knows what's going on...");
 		}
 	}
 	
 	public String decompress(){
+		// TODO rewrite to use BitSet
 		String data = "";
 		String decompressedData ="";
 		try{
 			data = extractData();
 		}catch(IOException e){
-			System.err.println("DECOMPRESS: Some thing went wrong. Contact someone who knows what's going on...");
+			System.err.println("DECOMPRESS [DECOMPRESS]: Some thing went wrong. Contact someone who knows what's going on...");
 		}
 		ArrayList<String> encodings = new ArrayList<String>(characterEncoding.keySet());
 		int bitSize = encodings.get(0).length();
@@ -71,7 +72,7 @@ public class Decompression {
 		
 		// Recreating the original data
 		
-		for(int end = bitSize; end < data.length(); end = end + bitSize){ // start bitSize positions in the data
+		for(int end = bitSize; end <= data.length(); end = end + bitSize){ // start bitSize positions in the data
 			String bitSection = data.substring(end-bitSize, end);
 			if(!characterEncoding.containsKey(bitSection)){
 				System.err.println("This isn't right....");
@@ -84,8 +85,8 @@ public class Decompression {
 	
 	private String extractData() throws IOException{
 		// Get the files
-		Scanner tableReader = new Scanner(new File(outputFileDest+File.separator+"table.txt"));
-		Scanner outputReader = new Scanner(new File(outputFileDest+File.separator+"output.txt"));
+		Scanner tableReader = new Scanner(new File(((outputFileDest.isEmpty()) ? "table.txt" : outputFileDest+ File.separator + "table.txt")));
+		Scanner outputReader = new Scanner(new File(((outputFileDest.isEmpty()) ? "output.txt" : outputFileDest+ File.separator + "output.txt")));
 		compressedData = outputReader.nextLong();
 		
 		compressedDataSize = tableReader.nextInt();

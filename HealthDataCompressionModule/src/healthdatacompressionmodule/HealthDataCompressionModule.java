@@ -67,7 +67,7 @@ public class HealthDataCompressionModule {
 			session.generateCompressedData(output);
 		} catch (Exception e) {
 			System.out
-					.println("Wierd Stuff Happened. Contact someone who knows what's going on...");
+					.println("COMPRESS [GENERATE]: Wierd Stuff Happened. Contact someone who knows what's going on...");
 		}
 	}
 
@@ -96,10 +96,18 @@ public class HealthDataCompressionModule {
 		comSession.startCompression(input);
 		try {
 			comSession.generateCompressedData(output);
-		} catch (Exception e) {
+		} catch (NumberFormatException e) {
 			System.err
-					.println("Weird stuff happened. You'll need to debug this...");
+					.println("COMPRESS [GENERATE]: Weird stuff happened. You'll need to debug this...");
+			System.out.println(e.getMessage() + "\n");
+			e.printStackTrace();
+		} catch (IOException e){
+			System.err
+			.println("COMPRESS [GENERATE]: Weird stuff happened. You'll need to debug this...");
+	System.out.println(e.getMessage());
 		}
+		String decInput = output + File.separator + "compressed.zip";
+		String decOutput = input.substring(0, input.indexOf(testFile));
 		Decompression decSession = new Decompression(output + File.separator
 				+ "compressed.zip", input.substring(0, input.indexOf(testFile)));
 		String data = decSession.decompress();
