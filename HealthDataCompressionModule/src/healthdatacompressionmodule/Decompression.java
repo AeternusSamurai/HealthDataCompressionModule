@@ -1,10 +1,12 @@
 package healthdatacompressionmodule;
 
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
@@ -14,7 +16,7 @@ public class Decompression {
 	private String inputZipFile;
 	private String outputFileDest;
 	private HashMap<String,Character> characterEncoding;
-	private long compressedData;
+	private byte[] compressedData;
 	private int compressedDataSize;
 	
 	public Decompression(String izf, String ofd){
@@ -87,8 +89,24 @@ public class Decompression {
 		// Get the files
 		Scanner tableReader = new Scanner(new File(((outputFileDest.isEmpty()) ? "table.txt" : outputFileDest+ File.separator + "table.txt")));
 		Scanner outputReader = new Scanner(new File(((outputFileDest.isEmpty()) ? "output.txt" : outputFileDest+ File.separator + "output.txt")));
-		compressedData = outputReader.nextLong();
+		FileInputStream fis = new FileInputStream(new File(((outputFileDest.isEmpty()) ? "output.txt" : outputFileDest+ File.separator + "output.txt")));
+		DataInputStream dis = new DataInputStream(fis);
 		
+		// Read the data from the file
+		ArrayList<Byte> compressed = new ArrayList<Byte>();
+		int read;
+		byte[] temp = new byte[1024];
+		while((read = dis.read(temp)) > 0){
+			for(int i = 0; i < read; i++){
+				compressed.add(temp[i]);
+			}
+		}
+		compressedData = new byte[compressed.size()];
+		for (int i = 0; i < compressed.size(); i++) {
+			compressedData[i] = compressed.get(i);
+		}
+		
+		// Get the encoding table for the compressed data
 		compressedDataSize = tableReader.nextInt();
 		while(tableReader.hasNext()){
 			Character ch = tableReader.next().charAt(0);
@@ -98,7 +116,14 @@ public class Decompression {
 		
 		outputReader.close();
 		tableReader.close();
-		return Long.toBinaryString(compressedData);
+		
+		String data = "";
+		BitSet bs = BitSet.valueOf(compressedData);
+		for(int i = 0; i < bs.size(); i++) {
+			data += (bs.get(i) ? "1" : "0");
+		}
+		System.out.println(data);
+		return data;
 	}
 	
 }
