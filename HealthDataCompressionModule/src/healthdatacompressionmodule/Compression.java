@@ -74,7 +74,7 @@ public class Compression {
 		try {
 			Scanner fileReader = new Scanner(new File(fileName));
 			while (fileReader.hasNextLine()) {
-				countCharacters(fileReader.nextLine());
+				countCharacters(fileReader.nextLine() + "\n");
 			}
 		} catch (Exception e) {
 			System.err.println("Found not found...");
@@ -100,8 +100,7 @@ public class Compression {
 	 *            Starting with 0
 	 * @return It is used for just calculating the huffrecursion value further.
 	 *         It's is not returning any final value Source:
-	 *         https://github.com/dharam3
-	 *         /DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
+	 *         https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
 	 */
 	public int huffManEncoding(CharFreq rootNode, int code) {
 		if (!rootNode.isLeafNode()) {
@@ -142,7 +141,7 @@ public class Compression {
 			code.append(1);
 			huffManEncoding(rootNode.right, code);
 		} else {
-			rootNode.huffMan = Integer.parseInt(code.toString());
+			rootNode.huffMan = Integer.parseUnsignedInt(code.toString());
 		}
 		// remove the last character while going back
 		if (code.length() > 0) {
@@ -163,14 +162,14 @@ public class Compression {
 		pQueue.addAll(charFreqs);
 		// Create Huffman tree
 		while (pQueue.size() > 1) {
-			CharFreq left = pQueue.remove();
-			CharFreq right = pQueue.remove();
+			CharFreq left = pQueue.poll();
+			CharFreq right = pQueue.poll();
 			CharFreq internal = new CharFreq(left.freq + right.freq, left,
 					right);
-			pQueue.add(internal);
+			pQueue.offer(internal);
 		}
 
-		// huffManEncoding(pQueue.remove(), new StringBuilder());
+		//huffManEncoding(pQueue.remove(), new StringBuilder());
 		huffManEncoding(pQueue.remove(), 0);
 	}
 
@@ -179,7 +178,7 @@ public class Compression {
 		System.out.println("Huffman codes for each character");
 		for (CharFreq charFreq : charFreqs) {
 			System.out.printf("%-5c%s\n", charFreq.ch,
-					Integer.toBinaryString(charFreq.huffMan));
+					charFreq.huffMan);
 		}
 	}
 
@@ -215,10 +214,13 @@ public class Compression {
 		for (CharFreq charFreq : charFreqs) {
 			binaryStrings.add(Integer.toBinaryString(charFreq.huffMan));
 		}
+		System.out.println(binaryStrings);
 		// Get the length of the largest binary number
 		int largestNum = getLargestNumber(binaryStrings);
 
 		normalizeBinaries(binaryStrings, largestNum);
+		
+		System.out.println(binaryStrings);
 
 		return binaryStrings;
 	}
@@ -283,15 +285,25 @@ public class Compression {
 		} catch (FileNotFoundException e) {
 			System.err
 					.println("COMPRESSION [OUT WRITE]: The file could not be opened or created");
-		} catch (IOException e){
-			System.err.println("COMPRESSION [OUT WRITE]: The file could not be written to");
+		} catch (IOException e) {
+			System.err
+					.println("COMPRESSION [OUT WRITE]: The file could not be written to");
 		}
 		// send the original length of the data to the file
 		tableWriter.println(comData.length());
 		// Write the table file and close the tableWriter object afterward.
 		for (int i = 0; i < binaryStrings.size(); i++) {
-			tableWriter.printf("%-5c%s\n", charFreqs.get(i).ch,
-					binaryStrings.get(i));
+			Character ch = charFreqs.get(i).ch;
+			if (ch.equals('\n')) {
+				tableWriter.printf("%-5s%s\n", "\\n", binaryStrings.get(i));
+			} else if (ch.equals('\t')) {
+				tableWriter.printf("%-5s%s\n", "\\t", binaryStrings.get(i));
+			} else if (Character.isWhitespace(ch)) {
+				tableWriter.printf("%-5s%s\n", "\\s", binaryStrings.get(i));
+			} else {
+				tableWriter.printf("%-5c%s\n", charFreqs.get(i).ch,
+						binaryStrings.get(i));
+			}
 		}
 		tableWriter.close(); // Closing the tableWriter object
 
@@ -319,7 +331,7 @@ public class Compression {
 			s = s.trim();
 			if (!s.isEmpty()) {
 				int bit = Integer.parseInt(s);
-				bs.set(bit);
+				bs.set(i, (bit == 1) ? true : false);
 			}
 		}
 		return bs;

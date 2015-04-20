@@ -55,7 +55,13 @@ public class CharFreq implements Comparable<CharFreq> {
 
     @Override
     public int compareTo(CharFreq o) {
-        return this.freq - o.freq;
+        if(this.freq < o.freq){
+        	return -1;
+        }else if(this.freq > o.freq){
+        	return 1;
+        }else{
+        	return 0;
+        }
     }
 
     /**
