@@ -32,7 +32,7 @@ public class CharFreq implements Comparable<CharFreq> {
     /**
      * This will be populated while traversing the huffman tree. By default -1
      */
-    int huffMan = -1;
+    String huffMan = "";
 
     /**
      * @param ch

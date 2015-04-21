@@ -61,7 +61,7 @@ public class Decompression {
 	}
 
 	public String decompress() {
-		// TODO rewrite to use BitSet
+		// TODO Recreate the tree from the table
 		String data = "";
 		String decompressedData = "";
 		try {

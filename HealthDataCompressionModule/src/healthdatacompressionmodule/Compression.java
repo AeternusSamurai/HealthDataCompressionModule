@@ -102,6 +102,7 @@ public class Compression {
 	 *         It's is not returning any final value Source:
 	 *         https://github.com/dharam3/DS/blob/master/src/com/dk/greedy/HuffmanCoding.java
 	 */
+	// DON'T USE
 	public int huffManEncoding(CharFreq rootNode, int code) {
 		if (!rootNode.isLeafNode()) {
 			// While going left left shift one bit, so that 0 will be appended
@@ -113,7 +114,7 @@ public class Compression {
 			code = (code << 1) | 1;
 			code = huffManEncoding(rootNode.right, code);
 		} else {
-			rootNode.huffMan = code;
+			//rootNode.huffMan = code;
 		}
 		// While going back right shift by one bit, to discard it
 		return code >> 1;
@@ -141,7 +142,7 @@ public class Compression {
 			code.append(1);
 			huffManEncoding(rootNode.right, code);
 		} else {
-			rootNode.huffMan = Integer.parseUnsignedInt(code.toString());
+			rootNode.huffMan = code.toString();
 		}
 		// remove the last character while going back
 		if (code.length() > 0) {
@@ -169,8 +170,8 @@ public class Compression {
 			pQueue.offer(internal);
 		}
 
-		//huffManEncoding(pQueue.remove(), new StringBuilder());
-		huffManEncoding(pQueue.remove(), 0);
+		huffManEncoding(pQueue.remove(), new StringBuilder());
+		//huffManEncoding(pQueue.remove(), 0);
 	}
 
 	public void printHuffmanEncoding() {
@@ -212,40 +213,13 @@ public class Compression {
 
 		// Get all of the Strings from the huffman tree
 		for (CharFreq charFreq : charFreqs) {
-			binaryStrings.add(Integer.toBinaryString(charFreq.huffMan));
+			binaryStrings.add(charFreq.huffMan);
 		}
-		System.out.println(binaryStrings);
-		// Get the length of the largest binary number
-		int largestNum = getLargestNumber(binaryStrings);
-
-		normalizeBinaries(binaryStrings, largestNum);
-		
 		System.out.println(binaryStrings);
 
 		return binaryStrings;
 	}
 
-	private void normalizeBinaries(ArrayList<String> binaryStrings,
-			int largestNum) {
-		for (int i = 0; i < binaryStrings.size(); i++) {
-			String binary = binaryStrings.get(i);
-			int zerosToAdd = largestNum - binary.length();
-			for (int j = 0; j < zerosToAdd; j++) {
-				binary = "0" + binary;
-			}
-			binaryStrings.set(i, binary);
-		}
-
-	}
-
-	private int getLargestNumber(ArrayList<String> binaryStrings) {
-		int largestNum = 0;
-		for (String string : binaryStrings) {
-			if (string.length() > largestNum)
-				largestNum = string.length();
-		}
-		return largestNum;
-	}
 
 	public void generateCompressedData(String outputDest) throws IOException,
 			NumberFormatException {
