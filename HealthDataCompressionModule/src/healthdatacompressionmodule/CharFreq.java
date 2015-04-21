@@ -52,6 +52,14 @@ public class CharFreq implements Comparable<CharFreq> {
         this.left = left;
         this.right = right;
     }
+    
+    public CharFreq(String huffcode){
+    	this.huffMan = huffcode;
+    }
+    
+    public CharFreq(){
+    	
+    }
 
     @Override
     public int compareTo(CharFreq o) {

@@ -91,7 +91,7 @@ public class HealthDataCompressionModule {
 	}
 
 	public static void test(String input, String output) {
-		String testFile = "input.txt";
+		String testFile = "VitalsReport.txt";
 		Compression comSession = new Compression();
 		comSession.startCompression(input);
 		try {

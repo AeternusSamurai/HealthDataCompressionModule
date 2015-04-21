@@ -78,21 +78,50 @@ public class Decompression {
 		}
 
 		// Recreating the original data
-
-		for (int end = bitSize; end <= data.length(); end = end + bitSize) { // start
-																				// bitSize
-																				// positions
-																				// in
-																				// the
-																				// data
-			String bitSection = data.substring(end - bitSize, end);
-			if (!characterEncoding.containsKey(bitSection)) {
-				System.err.println("This isn't right....");
+		// Recreate the tree that the compression side made
+		CharFreq root = recreateCompressionTree();
+		CharFreq current = root;
+		// Go through the compressed data and find each character of the compressed data
+		for(int i = 0; i < data.length(); i++){
+			char ch = data.charAt(i);
+			if(ch == '0'){
+				current = current.left;
+			}else{
+				current = current.right;
 			}
-			decompressedData += characterEncoding.get(bitSection);
+			if(current.isLeafNode()){
+				decompressedData+=""+characterEncoding.get(current.huffMan);
+				current = root;
+			}
 		}
+		
 
 		return decompressedData;
+	}
+
+	private CharFreq recreateCompressionTree() {
+		CharFreq root = new CharFreq();
+		CharFreq currentNode = root;
+		for(String encoding: characterEncoding.keySet()){
+			for(int i = 0; i < encoding.length(); i++){
+				char ch = encoding.charAt(i);
+				if(ch == '1'){ // If the character is "1", go right
+					if(currentNode.right == null){ // If the node in that direction doesn't exist, then create it
+						currentNode.right = new CharFreq();
+					}
+					currentNode = currentNode.right;
+				}else{ // Otherwise, go to the left.
+					if(currentNode.left == null){ // If the node in that direction doesn't exist, then create it
+						currentNode.left = new CharFreq();
+					}
+					currentNode = currentNode.left;
+				}
+			}
+			// Reached the end of the encoding, set the encoding to the current node
+			currentNode.huffMan = encoding;
+			currentNode = root; // reset to the top of the root of the tree.
+		}
+		return root;
 	}
 
 	private String extractData() throws IOException {
