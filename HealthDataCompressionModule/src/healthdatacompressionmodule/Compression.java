@@ -215,7 +215,8 @@ public class Compression {
 		for (CharFreq charFreq : charFreqs) {
 			binaryStrings.add(charFreq.huffMan);
 		}
-		System.out.println(binaryStrings);
+//		DEBUG Show the binary encoding off all of the characters
+//		System.out.println(binaryStrings);
 
 		return binaryStrings;
 	}
@@ -281,7 +282,7 @@ public class Compression {
 		}
 		tableWriter.close(); // Closing the tableWriter object
 
-		System.out.println("Writing new files to zip...");
+		System.out.println("Writing new files to zip...\n");
 		addToZipFile(/* ".."+File.separator+ */"output.txt", zos);
 		addToZipFile(/* ".."+File.separator+ */"table.txt", zos);
 		zos.close();

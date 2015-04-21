@@ -178,7 +178,8 @@ public class Decompression {
 		for (int i = 0; i < compressedDataSize; i++) {
 			data += (bs.get(i) ? "1" : "0");
 		}
-		System.out.println(data);
+//		DEBUG print out the binary of the compressed data
+//		System.out.println(data);
 		return data;
 	}
 }
