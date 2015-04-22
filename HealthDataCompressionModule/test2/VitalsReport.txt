@@ -1,0 +1,21 @@
+Warning Systolic Blood Pressure is too low.
+Seek medical attention immediately!
+
+
+Normal Vital Values
+---------------------------------------------------
+Heart Rate: 			High: 116 BPM	Low: 44 BPM
+Diastolic Blood Pressure: 	High: 81 mm Hg	Low: 71 mm Hg
+Systolic Blood Pressure: 	High: 138 mm Hg	Low: 118 mm Hg
+Oxygen Saturation: 		High: 100%	Low: 95%
+Body Temperature: 		High: 102.0 ℉	Low: 96.0℉
+
+
+
+Vitals at Time of Alert
+---------------------------------------------------
+Heart Rate: 			55 BPM
+Diastolic Blood Pressure: 	73mm Hg
+Systolic Blood Pressure: 	113 mm Hg
+Oxygen Saturation: 		95%
+Body Temperature: 		97.1 ℉
