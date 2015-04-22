@@ -3,8 +3,10 @@ package healthdatacompressionmodule;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ public class Decompression {
 	private HashMap<String, Character> characterEncoding;
 	private byte[] compressedData;
 	private int compressedDataSize;
+	private String decompressedFileName;
 
 	public Decompression(String izf, String ofd) {
 		inputZipFile = izf;
@@ -95,6 +98,14 @@ public class Decompression {
 			}
 		}
 		
+		try{
+		PrintWriter dataWriter = new PrintWriter(new File(outputFileDest+File.separator+decompressedFileName));
+		dataWriter.print(decompressedData);
+		dataWriter.close();
+		}catch(FileNotFoundException e){
+			
+		}
+		
 
 		return decompressedData;
 	}
@@ -150,6 +161,8 @@ public class Decompression {
 		for (int i = 0; i < compressed.size(); i++) {
 			compressedData[i] = compressed.get(i);
 		}
+		// Get the original file name of the file.
+		decompressedFileName = tableReader.nextLine();
 
 		// Get the encoding table for the compressed data
 		compressedDataSize = tableReader.nextInt();

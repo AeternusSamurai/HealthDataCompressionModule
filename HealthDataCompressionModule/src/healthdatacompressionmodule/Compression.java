@@ -39,6 +39,7 @@ public class Compression {
 	private HashMap<Character, Integer> characterFrequencies;
 	private ArrayList<CharFreq> charFreqs;
 	private String data;
+	private String compressedFileName;
 
 	public Compression() {
 		charFreqs = new ArrayList<>();
@@ -204,6 +205,11 @@ public class Compression {
 		} else {
 			countCharacters(s);
 		}
+		if(s.contains("\\")){
+			compressedFileName = s.substring(s.lastIndexOf('\\'));
+		}else{
+			compressedFileName = s;
+		}
 		constructCharFreqs();
 		calculateHuffManEncoding();
 	}
@@ -264,6 +270,8 @@ public class Compression {
 			System.err
 					.println("COMPRESSION [OUT WRITE]: The file could not be written to");
 		}
+		// send the original file name to the table
+		tableWriter.println(compressedFileName);
 		// send the original length of the data to the file
 		tableWriter.println(comData.length());
 		// Write the table file and close the tableWriter object afterward.

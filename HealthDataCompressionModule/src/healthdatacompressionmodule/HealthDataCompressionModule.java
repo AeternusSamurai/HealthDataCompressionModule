@@ -32,7 +32,7 @@ public class HealthDataCompressionModule {
 		// order of parameters: command inputFilePath outputFilePath
 		if (args.length == 3) {
 			// compress inputFilePath outputFilePath
-			if (args[0].equals("compression")) {
+			if (args[0].equals("compress")) {
 				compress(args[1], args[2]);
 			} else
 			// decompress inputFilePath outputFilePath
@@ -114,4 +114,7 @@ public class HealthDataCompressionModule {
 		System.out.println(data);
 	}
 
+	private static void save(String data){
+		
+	}
 }
