@@ -65,6 +65,8 @@ public class HealthDataCompressionModule {
 		session.startCompression(input);
 		try {
 			session.generateCompressedData(output);
+			if(System.console() != null)
+			System.console().writer().println("Compression.... Complete");
 		} catch (Exception e) {
 			System.out
 					.println("COMPRESS [GENERATE]: Wierd Stuff Happened. Contact someone who knows what's going on...");
@@ -75,6 +77,10 @@ public class HealthDataCompressionModule {
 		Decompression session = new Decompression(input, output);
 		String data = session.decompress();
 		System.out.println(data);
+		if(System.console() != null){
+			System.console().writer().println("Decompression.... Complete");
+			System.console().writer().print(data);
+		}
 	}
 
 	public static void showHelp() {
